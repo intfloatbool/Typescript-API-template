@@ -46,8 +46,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Express = __importStar(require("express"));
 var FakeDataCreator_1 = require("../Data/Factory/FakeDataCreator");
 var Router = Express.Router();
+var RequestParams = {
+    ID: 'id'
+};
 var dataProviderCreator = new FakeDataCreator_1.FakeDataCreator();
 var dataProvider = dataProviderCreator.create();
+Router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, user;
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                userId = req.params.id;
+                console.log("Params: \n " + JSON.stringify(req.params));
+                return [4 /*yield*/, ((_a = dataProvider) === null || _a === void 0 ? void 0 : _a.getUserById(Number(userId)))];
+            case 1:
+                user = _b.sent();
+                if (user) {
+                    res.json(user);
+                }
+                return [2 /*return*/];
+        }
+    });
+}); });
 Router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var users;
     return __generator(this, function (_a) {

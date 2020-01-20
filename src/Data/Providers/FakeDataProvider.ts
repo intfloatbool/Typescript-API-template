@@ -14,18 +14,21 @@ export class FakeDataProvider implements IDataProvider{
         this.userData = [
             new User(
                 this._valuesBuilder
+                    .setId(0)
                     .setFirstName('Vova')
                     .setPhoneNumber('8544 333 21 31')
                     .build()
                 ),
             new User(
                 this._valuesBuilder
+                    .setId(1)
                     .setFirstName('B0riz')
                     .setPhoneNumber('8577 555 21 98')
                     .build()
                 ),
             new User(
                 this._valuesBuilder
+                    .setId(2)
                     .setFirstName('Michael')
                     .setPhoneNumber('8544 123 55 21')
                     .build()
