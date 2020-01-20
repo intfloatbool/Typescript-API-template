@@ -66,7 +66,6 @@ Router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0
                 if (user) {
                     responseItem.Status = ResponseData_1.StatusType.SUCCESS;
                     responseItem.Data = user;
-                    throw new Error("Idi nahuy");
                 }
                 else {
                     responseItem.Status = ResponseData_1.StatusType.FAILED;

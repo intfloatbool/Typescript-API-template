@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var FakeDataProvider_1 = require("../Providers/FakeDataProvider");
+var FakeDataProvider_1 = require("../Providers/UserProviders/FakeDataProvider");
 var FakeUserDataCreator = /** @class */ (function () {
     function FakeUserDataCreator() {
     }
