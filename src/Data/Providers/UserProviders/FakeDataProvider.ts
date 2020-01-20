@@ -1,7 +1,7 @@
-import { IDataProvider } from "../IDataProvider";
-import {User} from '../../Models/Users/User';
-import UserValues from "../../Models/Users/UserValues";
-import UserValuesBuilder from "../Builders/UserValuesBuilder";
+import { IDataProvider } from "../../IDataProvider";
+import {User} from '../../../Models/Users/User';
+import UserValues from "../../../Models/Users/UserValues";
+import UserValuesBuilder from "../../Builders/UserValuesBuilder";
 
 export class FakeDataProvider implements IDataProvider<User, UserValues> {
 
