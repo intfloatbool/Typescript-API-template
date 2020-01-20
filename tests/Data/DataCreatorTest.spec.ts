@@ -1,28 +1,28 @@
 import {expect} from 'chai';
 import 'mocha';
 
-import {FakeDataCreator} from '../../src/Data/Factory/FakeDataCreator';
+import {FakeUserDataCreator} from '../../src/Data/Factory/FakeUserDataCreator';
 import { User } from '../../src/Models/Users/User';
 import UserValues from '../../src/Models/Users/UserValues';
 import UserValuesBuilder from '../../src/Data/Builders/UserValuesBuilder';
 describe('DataCreators functional', () => {
     it('Should return data provider', () => {
-        const dataCreator = new FakeDataCreator();
+        const dataCreator = new FakeUserDataCreator();
         const provider = dataCreator.create();
         expect(provider).is.not.null;
     });
 
     it('Data provider should return any data', async () => {
-        const dataCreator = new FakeDataCreator();
+        const dataCreator = new FakeUserDataCreator();
         const provider = dataCreator.create();
         if(provider != null) {
-            const users = await provider.getUsers();
+            const users = await provider.getItems();
             expect(users).is.not.null;
         }   
     });
 
     it('Provider should fully funcionallyty', async () => {
-        const dataCreator = new FakeDataCreator();
+        const dataCreator = new FakeUserDataCreator();
         const provider = dataCreator.create();
         
         const valuesBuilder: UserValuesBuilder = new UserValuesBuilder();
@@ -50,11 +50,11 @@ describe('DataCreators functional', () => {
         if(provider != null) {
 
             for(let user of users) {
-                provider.addUser(user);
+                provider.addItem(user);
             }
-            const vovaUser = await provider.getUserById(0);
-            const borizUser = await provider.getUserById(1);
-            const michaUser = await provider.getUserById(2);
+            const vovaUser = await provider.getItemById(0);
+            const borizUser = await provider.getItemById(1);
+            const michaUser = await provider.getItemById(2);
 
             if(vovaUser != null && borizUser != null && michaUser != null) {
                 expect(vovaUser.getValues().firstName).is.equals('Vova');

@@ -1,29 +1,48 @@
 import * as Express from 'express';
-import { IDataProviderCreator } from '../Data/IDataProviderCreator';
-import { FakeDataCreator } from '../Data/Factory/FakeDataCreator';
+import { FakeUserDataCreator } from '../Data/Factory/FakeUserDataCreator';
+import { ResponseItem, StatusType, FailedReason } from './ResponseData/ResponseData';
 const Router: Express.Router = Express.Router();
 
-const RequestParams = {
-    ID: 'id'
-}
-
-const dataProviderCreator: IDataProviderCreator = new FakeDataCreator();
+const dataProviderCreator = new FakeUserDataCreator();
 const dataProvider = dataProviderCreator.create();
 
+
 Router.get('/:id', async (req, res) => {
-    const userId = req.params.id;
-    console.log(`Params: \n ${JSON.stringify(req.params)}`);
-    const user = await dataProvider?.getUserById(Number(userId));
-    if(user) {
-        res.json(user);
+    const responseItem = new ResponseItem();
+    try {
+        const userId = req.params.id;
+        const user = await dataProvider?.getItemById(Number(userId));
+        if(user) {
+            responseItem.Status = StatusType.SUCCESS;
+            responseItem.Data = user;
+        } else {
+            responseItem.Status = StatusType.FAILED;
+            responseItem.Data = new FailedReason(`Cannot find item with id${userId}!`);
+        }
+    } catch(err) {
+        responseItem.Status = StatusType.FAILED;
+        responseItem.Data = new FailedReason(err.toString());
     }
+    res.json(responseItem);
 });
 
 Router.get('/', async (req, res) => {
-    if(dataProvider) {
-        const users = await dataProvider.getUsers();
-        res.json(users);
-    }  
+    const responseItem = new ResponseItem();
+    try {
+        if(dataProvider) {
+            const users = await dataProvider.getItems();    
+            responseItem.Status = StatusType.SUCCESS;
+            responseItem.Data = users;         
+        } else {
+            responseItem.Status = StatusType.FAILED;
+            responseItem.Data = new FailedReason(`DataProvier is null!`); 
+        }
+    } catch(err) {
+        responseItem.Status = StatusType.FAILED;
+        responseItem.Data = new FailedReason(err.toString()); 
+    }
+    
+    res.json(responseItem);  
 });
 
 export default Router;

@@ -9,7 +9,7 @@ var UserValuesBuilder = /** @class */ (function () {
         this._userValues = new UserValues_1.default();
     }
     UserValuesBuilder.prototype.setId = function (id) {
-        this._userValues.userId = id;
+        this._userValues.itemID = id;
         return this;
     };
     UserValuesBuilder.prototype.setFirstName = function (firstName) {

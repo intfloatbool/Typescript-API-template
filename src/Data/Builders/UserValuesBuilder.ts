@@ -7,7 +7,7 @@ export default class UserValuesBuilder implements IBuilder<UserValues> {
         this._userValues = new UserValues();
     }
     setId(id: Number): UserValuesBuilder {
-        this._userValues.userId = id;
+        this._userValues.itemID = id;
         return this;
     }
     setFirstName(firstName: String): UserValuesBuilder {

@@ -3,7 +3,7 @@ import {User} from '../../Models/Users/User';
 import UserValues from "../../Models/Users/UserValues";
 import UserValuesBuilder from "../Builders/UserValuesBuilder";
 
-export class FakeDataProvider implements IDataProvider{
+export class FakeDataProvider implements IDataProvider<User, UserValues> {
 
     private _currentUserIndex: number;
     private userData: Array<User>;
@@ -36,11 +36,11 @@ export class FakeDataProvider implements IDataProvider{
         ];
     }
 
-    addUser(user: User): Promise<User> {
+    addItem(user: User): Promise<User> {
         return new Promise((resolve,reject) => {
             try {
                 this.userData.push(user);
-                user.getValues().userId = this._currentUserIndex;
+                user.getValues().itemID = this._currentUserIndex;
                 this._currentUserIndex++;
                 resolve(user.clone());
             } catch(err) {
@@ -48,32 +48,32 @@ export class FakeDataProvider implements IDataProvider{
             }
         });
     }
-    updateUser(userId: Number, newUserValues: UserValues): Promise<User> {
+    updateItem(userId: Number, newUserValues: UserValues): Promise<User> {
         return new Promise((resolve, reject) => {
             try {
-                const target = this.userData.find(u => u.getValues().userId === userId);
+                const target = this.userData.find(u => u.getValues().itemID === userId);
                 if(target) {
                     target.setValues(newUserValues.clone());
                     resolve(target.clone());
                 } else {
-                    throw new Error(`Cannot find user with id ${userId}!`);
+                    resolve(undefined);
                 }
             } catch(err) {
                 reject(err);
             }
         });
     }
-    getUsers(): Promise<Array<User>> {
+    getItems(): Promise<Array<User>> {
         return new Promise(resolve => resolve(this.userData));
     }    
-    getUserById(userId: Number): Promise<User> | Promise<null> {
+    getItemById(userId: Number): Promise<User> | Promise<null> {
         return new Promise<User>((resolve,reject) => {
             try {
-                const target = this.userData.find(u => u.getValues().userId === userId);
+                const target = this.userData.find(u => u.getValues().itemID === userId);
                 if(target) {
                     resolve(target.clone());
                 } else {
-                    throw new Error(`Cannot find user with id ${userId}!`);
+                    resolve(undefined);
                 }
             } catch(err) {
                 reject(err);

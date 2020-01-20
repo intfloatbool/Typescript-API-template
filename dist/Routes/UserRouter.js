@@ -44,43 +44,75 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Express = __importStar(require("express"));
-var FakeDataCreator_1 = require("../Data/Factory/FakeDataCreator");
+var FakeUserDataCreator_1 = require("../Data/Factory/FakeUserDataCreator");
+var ResponseData_1 = require("./ResponseData/ResponseData");
 var Router = Express.Router();
-var RequestParams = {
-    ID: 'id'
-};
-var dataProviderCreator = new FakeDataCreator_1.FakeDataCreator();
+var dataProviderCreator = new FakeUserDataCreator_1.FakeUserDataCreator();
 var dataProvider = dataProviderCreator.create();
 Router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userId, user;
+    var responseItem, userId, user, err_1;
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                userId = req.params.id;
-                console.log("Params: \n " + JSON.stringify(req.params));
-                return [4 /*yield*/, ((_a = dataProvider) === null || _a === void 0 ? void 0 : _a.getUserById(Number(userId)))];
+                responseItem = new ResponseData_1.ResponseItem();
+                _b.label = 1;
             case 1:
+                _b.trys.push([1, 3, , 4]);
+                userId = req.params.id;
+                return [4 /*yield*/, ((_a = dataProvider) === null || _a === void 0 ? void 0 : _a.getItemById(Number(userId)))];
+            case 2:
                 user = _b.sent();
                 if (user) {
-                    res.json(user);
+                    responseItem.Status = ResponseData_1.StatusType.SUCCESS;
+                    responseItem.Data = user;
+                    throw new Error("Idi nahuy");
                 }
+                else {
+                    responseItem.Status = ResponseData_1.StatusType.FAILED;
+                    responseItem.Data = new ResponseData_1.FailedReason("Cannot find item with id" + userId + "!");
+                }
+                return [3 /*break*/, 4];
+            case 3:
+                err_1 = _b.sent();
+                responseItem.Status = ResponseData_1.StatusType.FAILED;
+                responseItem.Data = new ResponseData_1.FailedReason(err_1.toString());
+                return [3 /*break*/, 4];
+            case 4:
+                res.json(responseItem);
                 return [2 /*return*/];
         }
     });
 }); });
 Router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var users;
+    var responseItem, users, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!dataProvider) return [3 /*break*/, 2];
-                return [4 /*yield*/, dataProvider.getUsers()];
+                responseItem = new ResponseData_1.ResponseItem();
+                _a.label = 1;
             case 1:
+                _a.trys.push([1, 5, , 6]);
+                if (!dataProvider) return [3 /*break*/, 3];
+                return [4 /*yield*/, dataProvider.getItems()];
+            case 2:
                 users = _a.sent();
-                res.json(users);
-                _a.label = 2;
-            case 2: return [2 /*return*/];
+                responseItem.Status = ResponseData_1.StatusType.SUCCESS;
+                responseItem.Data = users;
+                return [3 /*break*/, 4];
+            case 3:
+                responseItem.Status = ResponseData_1.StatusType.FAILED;
+                responseItem.Data = new ResponseData_1.FailedReason("DataProvier is null!");
+                _a.label = 4;
+            case 4: return [3 /*break*/, 6];
+            case 5:
+                err_2 = _a.sent();
+                responseItem.Status = ResponseData_1.StatusType.FAILED;
+                responseItem.Data = new ResponseData_1.FailedReason(err_2.toString());
+                return [3 /*break*/, 6];
+            case 6:
+                res.json(responseItem);
+                return [2 /*return*/];
         }
     });
 }); });

@@ -27,12 +27,12 @@ var FakeDataProvider = /** @class */ (function () {
                 .build())
         ];
     }
-    FakeDataProvider.prototype.addUser = function (user) {
+    FakeDataProvider.prototype.addItem = function (user) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             try {
                 _this.userData.push(user);
-                user.getValues().userId = _this._currentUserIndex;
+                user.getValues().itemID = _this._currentUserIndex;
                 _this._currentUserIndex++;
                 resolve(user.clone());
             }
@@ -41,17 +41,17 @@ var FakeDataProvider = /** @class */ (function () {
             }
         });
     };
-    FakeDataProvider.prototype.updateUser = function (userId, newUserValues) {
+    FakeDataProvider.prototype.updateItem = function (userId, newUserValues) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             try {
-                var target = _this.userData.find(function (u) { return u.getValues().userId === userId; });
+                var target = _this.userData.find(function (u) { return u.getValues().itemID === userId; });
                 if (target) {
                     target.setValues(newUserValues.clone());
                     resolve(target.clone());
                 }
                 else {
-                    throw new Error("Cannot find user with id " + userId + "!");
+                    resolve(undefined);
                 }
             }
             catch (err) {
@@ -59,20 +59,20 @@ var FakeDataProvider = /** @class */ (function () {
             }
         });
     };
-    FakeDataProvider.prototype.getUsers = function () {
+    FakeDataProvider.prototype.getItems = function () {
         var _this = this;
         return new Promise(function (resolve) { return resolve(_this.userData); });
     };
-    FakeDataProvider.prototype.getUserById = function (userId) {
+    FakeDataProvider.prototype.getItemById = function (userId) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             try {
-                var target = _this.userData.find(function (u) { return u.getValues().userId === userId; });
+                var target = _this.userData.find(function (u) { return u.getValues().itemID === userId; });
                 if (target) {
                     resolve(target.clone());
                 }
                 else {
-                    throw new Error("Cannot find user with id " + userId + "!");
+                    resolve(undefined);
                 }
             }
             catch (err) {

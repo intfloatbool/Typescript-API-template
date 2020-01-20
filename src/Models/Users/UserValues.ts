@@ -1,13 +1,14 @@
-export default class UserValues {
-    userId?: Number;
+import ValuesBase from "../ValuesBase";
+
+export default class UserValues extends ValuesBase {
     firstName?: String;
     phoneNumber?: String;
     userRole?: Number;
     bonuses?: Number;
     
-    clone(): UserValues {
+    clone(): UserValues  {
         const copy = new UserValues();
-        copy.userId = this.userId;
+        copy.itemID = this.itemID;
         copy.firstName = this.firstName;
         copy.phoneNumber = this.phoneNumber;
         copy.userRole = this.userRole;

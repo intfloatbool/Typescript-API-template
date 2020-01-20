@@ -1,9 +1,11 @@
-import { User } from "../Models/Users/User";
-import UserValues from "../Models/Users/UserValues";
+import ValuesBase from "../Models/ValuesBase";
 
-export interface IDataProvider {
-    addUser(user: User): Promise<User>;
-    updateUser(userId: Number, newUserValues: UserValues): Promise<User>; 
-    getUsers(): Promise<Array<User>>;
-    getUserById(id: Number): Promise<User> | Promise<null>;
+/**
+ * IDataProvider<T, V> where T - is type of provided data, V - is type of data values
+ */
+export interface IDataProvider<T, V extends ValuesBase> {
+    addItem(item: T): Promise<T>;
+    updateItem(itemId: Number, values: V): Promise<T>; 
+    getItems(): Promise<Array<T>>;
+    getItemById(id: Number): Promise<T> | Promise<null>;
 }
