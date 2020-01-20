@@ -7,8 +7,13 @@ var express_1 = __importDefault(require("express"));
 var body_parser_1 = __importDefault(require("body-parser"));
 var PORT = process.env.PORT || 6011;
 var app = express_1.default();
+var UserRouter_1 = __importDefault(require("./Routes/UserRouter"));
+var Routes = {
+    USERS: '/users'
+};
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use(body_parser_1.default.json());
+app.use(Routes.USERS, UserRouter_1.default);
 app.get('/', function (req, res) {
     var body = req.body;
     if (body.name) {
