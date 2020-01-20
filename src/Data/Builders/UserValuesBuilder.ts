@@ -11,19 +11,23 @@ export default class UserValuesBuilder implements IBuilder<UserValues> {
         return this;
     }
     setFirstName(firstName: String): UserValuesBuilder {
-        this._userValues.firstName = firstName;
+        if(firstName)
+            this._userValues.firstName = firstName;
         return this;
     }
     setPhoneNumber(phoneNumber: string): UserValuesBuilder {
-        this._userValues.phoneNumber = phoneNumber;
+        if(phoneNumber)
+            this._userValues.phoneNumber = phoneNumber;
         return this;
     }
-    setRole(userRole: number): UserValuesBuilder {
-        this._userValues.userRole = userRole;
+    setRole(userRole?: number): UserValuesBuilder {
+        if(userRole)
+            this._userValues.userRole = userRole;
         return this;
     }
-    setBonuses(bonuses: number): UserValuesBuilder {
-        this._userValues.bonuses = bonuses;
+    setBonuses(bonuses?: number): UserValuesBuilder {
+        if(bonuses)
+            this._userValues.bonuses = bonuses;
         return this;
     }
     build(): UserValues {

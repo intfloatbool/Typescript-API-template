@@ -17,14 +17,6 @@ Router.post('/', async (req, res) => {
         }
         const firstName = body.firstName;
         const phoneNumber = body.phoneNumber;
-
-        if(!firstName) {
-            throw new Error("Field not found: firstName");
-        }
-        if(!phoneNumber) {
-            throw new Error("Field not found: phoneNumber");
-        }
-
         const user = await dataProvider.create(new User(
             new UserValuesBuilder()
             .setFirstName(firstName)
@@ -48,19 +40,11 @@ Router.put('/:id', async (req, res) => {
     const responseItem = new ResponseItem();
     const body = req.body;
     try {
-
         if(!body) {
             throw new Error("No body of request.");
         }
         const firstName = body.firstName;
         const phoneNumber = body.phoneNumber;
-
-        if(!firstName) {
-            throw new Error("Field not found: firstName");
-        }
-        if(!phoneNumber) {
-            throw new Error("Field not found: phoneNumber");
-        }
 
         const userId = req.params.id;
         const user = await dataProvider.update(Number(userId), 
@@ -84,7 +68,22 @@ Router.put('/:id', async (req, res) => {
 });
 
 Router.delete('/:id', async (req, res) => {
-
+    const responseItem = new ResponseItem();
+    try {
+        const userId = req.params.id;
+        const isUserDeleted = await dataProvider.delete(Number(userId));
+        if(isUserDeleted) {
+            responseItem.Status = StatusType.SUCCESS;
+            responseItem.Data = {deleted: true};
+        } else {
+            responseItem.Status = StatusType.FAILED;
+            responseItem.Data = new FailedReason(`Cannot find item with id${userId}!`);
+        }
+    } catch(err) {
+        responseItem.Status = StatusType.FAILED;
+        responseItem.Data = new FailedReason(err.toString());
+    }
+    res.json(responseItem);
 });
 
 Router.get('/:id', async (req, res) => {

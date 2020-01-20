@@ -53,9 +53,10 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
             try {
                 const target = this.userData.find(u => u.getValues().itemID === userId);
                 if(target) {
-                    const targetId = target.getValues().itemID;
+                    const oldValues = target.getValues();
+                    const targetId = oldValues.itemID;
                     newUserValues.itemID = targetId;
-                    target.setValues(newUserValues.clone());
+                    target.setValues(newUserValues.clone(oldValues));
                     resolve(target.clone());
                 } else {
                     resolve(undefined);
@@ -88,7 +89,13 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
             try {
                 const target = this.userData.find(u => u.getValues().itemID === id);
                 if(target) {
-                    resolve(true);
+                    const index = this.userData.indexOf(target);
+                    let isDeleted = false;
+                    if(index >= 0) {
+                        this.userData.splice(index, 1);
+                        isDeleted = true;
+                    }
+                    resolve(isDeleted);
                 } else {
                     resolve(false);
                 }
