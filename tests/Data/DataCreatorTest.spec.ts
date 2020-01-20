@@ -16,7 +16,7 @@ describe('DataCreators functional', () => {
         const dataCreator = new FakeUserDataCreator();
         const provider = dataCreator.create();
         if(provider != null) {
-            const users = await provider.getItems();
+            const users = await provider.list();
             expect(users).is.not.null;
         }   
     });
@@ -50,11 +50,11 @@ describe('DataCreators functional', () => {
         if(provider != null) {
 
             for(let user of users) {
-                provider.addItem(user);
+                provider.create(user);
             }
-            const vovaUser = await provider.getItemById(0);
-            const borizUser = await provider.getItemById(1);
-            const michaUser = await provider.getItemById(2);
+            const vovaUser = await provider.read(0);
+            const borizUser = await provider.read(1);
+            const michaUser = await provider.read(2);
 
             if(vovaUser != null && borizUser != null && michaUser != null) {
                 expect(vovaUser.getValues().firstName).is.equals('Vova');

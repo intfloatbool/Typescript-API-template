@@ -4,39 +4,39 @@ import UserValues from "../../../Models/Users/UserValues";
 import UserValuesBuilder from "../../Builders/UserValuesBuilder";
 
 export class FakeDataProvider implements IDataProvider<User, UserValues> {
-
+    
     private _currentUserIndex: number;
     private userData: Array<User>;
     private _valuesBuilder: UserValuesBuilder;
     constructor() {
         this._currentUserIndex = 0;
         this._valuesBuilder = new UserValuesBuilder();
-        this.userData = [
+        this.userData = [];
+        //fill data for test
+        this.create(
             new User(
                 this._valuesBuilder
-                    .setId(0)
                     .setFirstName('Vova')
                     .setPhoneNumber('8544 333 21 31')
                     .build()
-                ),
+            ));
+        this.create(
             new User(
                 this._valuesBuilder
-                    .setId(1)
                     .setFirstName('B0riz')
                     .setPhoneNumber('8577 555 21 98')
                     .build()
-                ),
+            ));
+        this.create(
             new User(
                 this._valuesBuilder
-                    .setId(2)
                     .setFirstName('Michael')
                     .setPhoneNumber('8544 123 55 21')
                     .build()
-                )
-        ];
+            ));
     }
 
-    addItem(user: User): Promise<User> {
+    create(user: User): Promise<User> {
         return new Promise((resolve,reject) => {
             try {
                 this.userData.push(user);
@@ -48,7 +48,7 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
             }
         });
     }
-    updateItem(userId: Number, newUserValues: UserValues): Promise<User> {
+    update(userId: Number, newUserValues: UserValues): Promise<User> {
         return new Promise((resolve, reject) => {
             try {
                 const target = this.userData.find(u => u.getValues().itemID === userId);
@@ -63,10 +63,10 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
             }
         });
     }
-    getItems(): Promise<Array<User>> {
+    list(): Promise<Array<User>> {
         return new Promise(resolve => resolve(this.userData));
     }    
-    getItemById(userId: Number): Promise<User> | Promise<null> {
+    read(userId: Number): Promise<User> | Promise<null> {
         return new Promise<User>((resolve,reject) => {
             try {
                 const target = this.userData.find(u => u.getValues().itemID === userId);
@@ -74,6 +74,21 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
                     resolve(target.clone());
                 } else {
                     resolve(undefined);
+                }
+            } catch(err) {
+                reject(err);
+            }
+        });
+    }
+
+    delete(id: Number): Promise<boolean> {
+        return new Promise<boolean>((resolve,reject) => {
+            try {
+                const target = this.userData.find(u => u.getValues().itemID === id);
+                if(target) {
+                    resolve(true);
+                } else {
+                    resolve(false);
                 }
             } catch(err) {
                 reject(err);

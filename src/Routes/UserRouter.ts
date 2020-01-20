@@ -1,17 +1,62 @@
 import * as Express from 'express';
 import { FakeUserDataCreator } from '../Data/Factory/FakeUserDataCreator';
 import { ResponseItem, StatusType, FailedReason } from './ResponseData/ResponseData';
+import { User } from '../Models/Users/User';
+import UserValuesBuilder from '../Data/Builders/UserValuesBuilder';
 const Router: Express.Router = Express.Router();
 
 const dataProviderCreator = new FakeUserDataCreator();
 const dataProvider = dataProviderCreator.create();
 
+Router.post('/', async (req, res) => {
+    const body = req.body;
+    const responseItem = new ResponseItem();
+    try {
+        if(!body) {
+            throw new Error("No body of request.");
+        }
+        const firstName = body.firstName;
+        const phoneNumber = body.phoneNumber;
+
+        if(!firstName) {
+            throw new Error("Field not found: firstName");
+        }
+        if(!phoneNumber) {
+            throw new Error("Field not found: phoneNumber");
+        }
+
+        const user = await dataProvider.create(new User(
+            new UserValuesBuilder()
+            .setFirstName(firstName)
+            .setPhoneNumber(phoneNumber)
+            .build()
+        ));
+
+        if(user) {
+            responseItem.Status = StatusType.SUCCESS;
+            responseItem.Data = user;
+        } 
+
+    } catch(err) {
+        responseItem.Status = StatusType.FAILED;
+        responseItem.Data = new FailedReason(err.toString());
+    }
+    res.json(responseItem);
+});
+
+Router.put('/:id', async (req, res) => {
+
+});
+
+Router.delete('/:id', async (req, res) => {
+
+});
 
 Router.get('/:id', async (req, res) => {
     const responseItem = new ResponseItem();
     try {
         const userId = req.params.id;
-        const user = await dataProvider.getItemById(Number(userId));
+        const user = await dataProvider.read(Number(userId));
         if(user) {
             responseItem.Status = StatusType.SUCCESS;
             responseItem.Data = user;
@@ -30,7 +75,7 @@ Router.get('/', async (req, res) => {
     const responseItem = new ResponseItem();
     try {
         if(dataProvider) {
-            const users = await dataProvider.getItems();    
+            const users = await dataProvider.list();    
             responseItem.Status = StatusType.SUCCESS;
             responseItem.Data = users;         
         } else {

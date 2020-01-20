@@ -42,33 +42,48 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var Express = __importStar(require("express"));
 var FakeUserDataCreator_1 = require("../Data/Factory/FakeUserDataCreator");
 var ResponseData_1 = require("./ResponseData/ResponseData");
+var User_1 = require("../Models/Users/User");
+var UserValuesBuilder_1 = __importDefault(require("../Data/Builders/UserValuesBuilder"));
 var Router = Express.Router();
 var dataProviderCreator = new FakeUserDataCreator_1.FakeUserDataCreator();
 var dataProvider = dataProviderCreator.create();
-Router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var responseItem, userId, user, err_1;
+Router.post('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var body, responseItem, firstName, phoneNumber, user, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                body = req.body;
                 responseItem = new ResponseData_1.ResponseItem();
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                userId = req.params.id;
-                return [4 /*yield*/, dataProvider.getItemById(Number(userId))];
+                if (!body) {
+                    throw new Error("No body of request.");
+                }
+                firstName = body.firstName;
+                phoneNumber = body.phoneNumber;
+                if (!firstName) {
+                    throw new Error("Field not found: firstName");
+                }
+                if (!phoneNumber) {
+                    throw new Error("Field not found: phoneNumber");
+                }
+                return [4 /*yield*/, dataProvider.create(new User_1.User(new UserValuesBuilder_1.default()
+                        .setFirstName(firstName)
+                        .setPhoneNumber(phoneNumber)
+                        .build()))];
             case 2:
                 user = _a.sent();
                 if (user) {
                     responseItem.Status = ResponseData_1.StatusType.SUCCESS;
                     responseItem.Data = user;
-                }
-                else {
-                    responseItem.Status = ResponseData_1.StatusType.FAILED;
-                    responseItem.Data = new ResponseData_1.FailedReason("Cannot find item with id" + userId + "!");
                 }
                 return [3 /*break*/, 4];
             case 3:
@@ -82,8 +97,51 @@ Router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0
         }
     });
 }); });
+Router.put('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/];
+    });
+}); });
+Router.delete('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/];
+    });
+}); });
+Router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var responseItem, userId, user, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                responseItem = new ResponseData_1.ResponseItem();
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                userId = req.params.id;
+                return [4 /*yield*/, dataProvider.read(Number(userId))];
+            case 2:
+                user = _a.sent();
+                if (user) {
+                    responseItem.Status = ResponseData_1.StatusType.SUCCESS;
+                    responseItem.Data = user;
+                }
+                else {
+                    responseItem.Status = ResponseData_1.StatusType.FAILED;
+                    responseItem.Data = new ResponseData_1.FailedReason("Cannot find item with id" + userId + "!");
+                }
+                return [3 /*break*/, 4];
+            case 3:
+                err_2 = _a.sent();
+                responseItem.Status = ResponseData_1.StatusType.FAILED;
+                responseItem.Data = new ResponseData_1.FailedReason(err_2.toString());
+                return [3 /*break*/, 4];
+            case 4:
+                res.json(responseItem);
+                return [2 /*return*/];
+        }
+    });
+}); });
 Router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var responseItem, users, err_2;
+    var responseItem, users, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -92,7 +150,7 @@ Router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, f
             case 1:
                 _a.trys.push([1, 5, , 6]);
                 if (!dataProvider) return [3 /*break*/, 3];
-                return [4 /*yield*/, dataProvider.getItems()];
+                return [4 /*yield*/, dataProvider.list()];
             case 2:
                 users = _a.sent();
                 responseItem.Status = ResponseData_1.StatusType.SUCCESS;
@@ -104,9 +162,9 @@ Router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 _a.label = 4;
             case 4: return [3 /*break*/, 6];
             case 5:
-                err_2 = _a.sent();
+                err_3 = _a.sent();
                 responseItem.Status = ResponseData_1.StatusType.FAILED;
-                responseItem.Data = new ResponseData_1.FailedReason(err_2.toString());
+                responseItem.Data = new ResponseData_1.FailedReason(err_3.toString());
                 return [3 /*break*/, 6];
             case 6:
                 res.json(responseItem);

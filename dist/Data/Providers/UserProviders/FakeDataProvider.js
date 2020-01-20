@@ -9,25 +9,22 @@ var FakeDataProvider = /** @class */ (function () {
     function FakeDataProvider() {
         this._currentUserIndex = 0;
         this._valuesBuilder = new UserValuesBuilder_1.default();
-        this.userData = [
-            new User_1.User(this._valuesBuilder
-                .setId(0)
-                .setFirstName('Vova')
-                .setPhoneNumber('8544 333 21 31')
-                .build()),
-            new User_1.User(this._valuesBuilder
-                .setId(1)
-                .setFirstName('B0riz')
-                .setPhoneNumber('8577 555 21 98')
-                .build()),
-            new User_1.User(this._valuesBuilder
-                .setId(2)
-                .setFirstName('Michael')
-                .setPhoneNumber('8544 123 55 21')
-                .build())
-        ];
+        this.userData = [];
+        //fill data for test
+        this.create(new User_1.User(this._valuesBuilder
+            .setFirstName('Vova')
+            .setPhoneNumber('8544 333 21 31')
+            .build()));
+        this.create(new User_1.User(this._valuesBuilder
+            .setFirstName('B0riz')
+            .setPhoneNumber('8577 555 21 98')
+            .build()));
+        this.create(new User_1.User(this._valuesBuilder
+            .setFirstName('Michael')
+            .setPhoneNumber('8544 123 55 21')
+            .build()));
     }
-    FakeDataProvider.prototype.addItem = function (user) {
+    FakeDataProvider.prototype.create = function (user) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             try {
@@ -41,7 +38,7 @@ var FakeDataProvider = /** @class */ (function () {
             }
         });
     };
-    FakeDataProvider.prototype.updateItem = function (userId, newUserValues) {
+    FakeDataProvider.prototype.update = function (userId, newUserValues) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             try {
@@ -59,11 +56,11 @@ var FakeDataProvider = /** @class */ (function () {
             }
         });
     };
-    FakeDataProvider.prototype.getItems = function () {
+    FakeDataProvider.prototype.list = function () {
         var _this = this;
         return new Promise(function (resolve) { return resolve(_this.userData); });
     };
-    FakeDataProvider.prototype.getItemById = function (userId) {
+    FakeDataProvider.prototype.read = function (userId) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             try {
@@ -73,6 +70,23 @@ var FakeDataProvider = /** @class */ (function () {
                 }
                 else {
                     resolve(undefined);
+                }
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    };
+    FakeDataProvider.prototype.delete = function (id) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            try {
+                var target = _this.userData.find(function (u) { return u.getValues().itemID === id; });
+                if (target) {
+                    resolve(true);
+                }
+                else {
+                    resolve(false);
                 }
             }
             catch (err) {
