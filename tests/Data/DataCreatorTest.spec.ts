@@ -4,7 +4,7 @@ import 'mocha';
 import {FakeDataCreator} from '../../src/Data/Factory/FakeDataCreator';
 import { User } from '../../src/Models/Users/User';
 import UserValues from '../../src/Models/Users/UserValues';
-
+import UserValuesBuilder from '../../src/Data/Builders/UserValuesBuilder';
 describe('DataCreators functional', () => {
     it('Should return data provider', () => {
         const dataCreator = new FakeDataCreator();
@@ -25,10 +25,27 @@ describe('DataCreators functional', () => {
         const dataCreator = new FakeDataCreator();
         const provider = dataCreator.create();
         
+        const valuesBuilder: UserValuesBuilder = new UserValuesBuilder();
+        
         let users: Array<User> = [
-            new User(new UserValues('Vova', '8544 333 21 31')),
-            new User(new UserValues('B0riz', '8577 555 21 98')),
-            new User(new UserValues('Michael', '8544 123 55 21'))
+            new User(
+                valuesBuilder
+                    .setFirstName('Vova')
+                    .setPhoneNumber('8544 333 21 31')
+                    .build()
+                ),
+            new User(
+                valuesBuilder
+                    .setFirstName('B0riz')
+                    .setPhoneNumber('8577 555 21 98')
+                    .build()
+                ),
+            new User(
+                valuesBuilder
+                    .setFirstName('Michael')
+                    .setPhoneNumber('8544 123 55 21')
+                    .build()
+                )
         ]; 
         if(provider != null) {
 
@@ -40,9 +57,9 @@ describe('DataCreators functional', () => {
             const michaUser = await provider.getUserById(2);
 
             if(vovaUser != null && borizUser != null && michaUser != null) {
-                expect(vovaUser.getValues().getFirstName()).is.equals('Vova');
-                expect(borizUser.getValues().getFirstName()).is.equals('B0riz');
-                expect(michaUser.getValues().getFirstName()).is.equals('Michael');
+                expect(vovaUser.getValues().firstName).is.equals('Vova');
+                expect(borizUser.getValues().firstName).is.equals('B0riz');
+                expect(michaUser.getValues().firstName).is.equals('Michael');
             } else {
                 expect.fail('Some users is null');
             }

@@ -1,24 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var UserValues = /** @class */ (function () {
-    function UserValues(firstName, phoneNumber, bonuses) {
-        var _this = this;
-        if (bonuses === void 0) { bonuses = 0; }
-        this.getId = function () { return _this._userId; };
-        this.getFirstName = function () { return _this._firstName; };
-        this.getPhoneNumber = function () { return _this._phoneNumber; };
-        this.getBonuses = function () { return _this._bonuses; };
-        this._userId = 0;
-        this._firstName = firstName;
-        this._phoneNumber = phoneNumber;
-        this._bonuses = bonuses;
+    function UserValues() {
     }
-    UserValues.prototype.setUserId = function (userId) {
-        this._userId = userId;
-    };
     UserValues.prototype.clone = function () {
-        return new UserValues(this._firstName, this._phoneNumber, this._bonuses);
+        var copy = new UserValues();
+        copy.userId = this.userId;
+        copy.firstName = this.firstName;
+        copy.phoneNumber = this.phoneNumber;
+        copy.userRole = this.userRole;
+        copy.bonuses = this.bonuses;
+        return copy;
     };
     return UserValues;
 }());
 exports.default = UserValues;
+//# sourceMappingURL=UserValues.js.map

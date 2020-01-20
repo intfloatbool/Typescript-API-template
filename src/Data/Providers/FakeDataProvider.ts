@@ -1,21 +1,43 @@
 import { IDataProvider } from "../IDataProvider";
 import {User} from '../../Models/Users/User';
 import UserValues from "../../Models/Users/UserValues";
+import UserValuesBuilder from "../Builders/UserValuesBuilder";
 
 export class FakeDataProvider implements IDataProvider{
 
     private _currentUserIndex: number;
     private userData: Array<User>;
+    private _valuesBuilder: UserValuesBuilder;
     constructor() {
         this._currentUserIndex = 0;
-        this.userData = new Array<User>();
+        this._valuesBuilder = new UserValuesBuilder();
+        this.userData = [
+            new User(
+                this._valuesBuilder
+                    .setFirstName('Vova')
+                    .setPhoneNumber('8544 333 21 31')
+                    .build()
+                ),
+            new User(
+                this._valuesBuilder
+                    .setFirstName('B0riz')
+                    .setPhoneNumber('8577 555 21 98')
+                    .build()
+                ),
+            new User(
+                this._valuesBuilder
+                    .setFirstName('Michael')
+                    .setPhoneNumber('8544 123 55 21')
+                    .build()
+                )
+        ];
     }
 
     addUser(user: User): Promise<User> {
         return new Promise((resolve,reject) => {
             try {
                 this.userData.push(user);
-                user.getValues().setUserId(this._currentUserIndex);
+                user.getValues().userId = this._currentUserIndex;
                 this._currentUserIndex++;
                 resolve(user.clone());
             } catch(err) {
@@ -26,7 +48,7 @@ export class FakeDataProvider implements IDataProvider{
     updateUser(userId: Number, newUserValues: UserValues): Promise<User> {
         return new Promise((resolve, reject) => {
             try {
-                const target = this.userData.find(u => u.getValues().getId() === userId);
+                const target = this.userData.find(u => u.getValues().userId === userId);
                 if(target) {
                     target.setValues(newUserValues.clone());
                     resolve(target.clone());
@@ -44,7 +66,7 @@ export class FakeDataProvider implements IDataProvider{
     getUserById(userId: Number): Promise<User> | Promise<null> {
         return new Promise<User>((resolve,reject) => {
             try {
-                const target = this.userData.find(u => u.getValues().getId() === userId);
+                const target = this.userData.find(u => u.getValues().userId === userId);
                 if(target) {
                     resolve(target.clone());
                 } else {

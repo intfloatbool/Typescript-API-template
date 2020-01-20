@@ -25,3 +25,4 @@ app.get('/', function (req, res) {
 app.listen(PORT, function () {
     console.log("Applicatuin running at port: " + PORT);
 });
+//# sourceMappingURL=index.js.map
