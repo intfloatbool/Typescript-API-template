@@ -45,7 +45,42 @@ Router.post('/', async (req, res) => {
 });
 
 Router.put('/:id', async (req, res) => {
+    const responseItem = new ResponseItem();
+    const body = req.body;
+    try {
 
+        if(!body) {
+            throw new Error("No body of request.");
+        }
+        const firstName = body.firstName;
+        const phoneNumber = body.phoneNumber;
+
+        if(!firstName) {
+            throw new Error("Field not found: firstName");
+        }
+        if(!phoneNumber) {
+            throw new Error("Field not found: phoneNumber");
+        }
+
+        const userId = req.params.id;
+        const user = await dataProvider.update(Number(userId), 
+            new UserValuesBuilder()
+                .setFirstName(firstName)
+                .setPhoneNumber(phoneNumber)
+                .build()
+            );
+        if(user) {
+            responseItem.Status = StatusType.SUCCESS;
+            responseItem.Data = user;
+        } else {
+            responseItem.Status = StatusType.FAILED;
+            responseItem.Data = new FailedReason(`Cannot find item with id${userId}!`);
+        }
+    } catch(err) {
+        responseItem.Status = StatusType.FAILED;
+        responseItem.Data = new FailedReason(err.toString());
+    }
+    res.json(responseItem);
 });
 
 Router.delete('/:id', async (req, res) => {

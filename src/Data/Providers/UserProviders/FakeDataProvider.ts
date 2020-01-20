@@ -53,6 +53,8 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
             try {
                 const target = this.userData.find(u => u.getValues().itemID === userId);
                 if(target) {
+                    const targetId = target.getValues().itemID;
+                    newUserValues.itemID = targetId;
                     target.setValues(newUserValues.clone());
                     resolve(target.clone());
                 } else {
