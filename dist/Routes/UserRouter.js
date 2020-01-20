@@ -51,18 +51,17 @@ var dataProviderCreator = new FakeUserDataCreator_1.FakeUserDataCreator();
 var dataProvider = dataProviderCreator.create();
 Router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var responseItem, userId, user, err_1;
-    var _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
                 responseItem = new ResponseData_1.ResponseItem();
-                _b.label = 1;
+                _a.label = 1;
             case 1:
-                _b.trys.push([1, 3, , 4]);
+                _a.trys.push([1, 3, , 4]);
                 userId = req.params.id;
-                return [4 /*yield*/, ((_a = dataProvider) === null || _a === void 0 ? void 0 : _a.getItemById(Number(userId)))];
+                return [4 /*yield*/, dataProvider.getItemById(Number(userId))];
             case 2:
-                user = _b.sent();
+                user = _a.sent();
                 if (user) {
                     responseItem.Status = ResponseData_1.StatusType.SUCCESS;
                     responseItem.Data = user;
@@ -73,7 +72,7 @@ Router.get('/:id', function (req, res) { return __awaiter(void 0, void 0, void 0
                 }
                 return [3 /*break*/, 4];
             case 3:
-                err_1 = _b.sent();
+                err_1 = _a.sent();
                 responseItem.Status = ResponseData_1.StatusType.FAILED;
                 responseItem.Data = new ResponseData_1.FailedReason(err_1.toString());
                 return [3 /*break*/, 4];

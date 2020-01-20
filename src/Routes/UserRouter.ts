@@ -11,7 +11,7 @@ Router.get('/:id', async (req, res) => {
     const responseItem = new ResponseItem();
     try {
         const userId = req.params.id;
-        const user = await dataProvider?.getItemById(Number(userId));
+        const user = await dataProvider.getItemById(Number(userId));
         if(user) {
             responseItem.Status = StatusType.SUCCESS;
             responseItem.Data = user;

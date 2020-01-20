@@ -5,7 +5,7 @@ import { User } from "../../Models/Users/User";
 import UserValues from "../../Models/Users/UserValues";
 
 export class FakeUserDataCreator implements IDataProviderCreator<User, UserValues> {
-    create(): IDataProvider<User, UserValues> | null {
+    create(): IDataProvider<User, UserValues> {
         return new FakeDataProvider();
     }
 }
