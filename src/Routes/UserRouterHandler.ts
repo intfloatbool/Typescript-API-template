@@ -145,7 +145,7 @@ export default class UserRouterHandler implements IRouterHandler {
             responseItem.Status = StatusType.FAILED;
             responseItem.Data = new FailedReason(err.toString()); 
         }
-        this.getEventByType(EventTypes.ON_LIST)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res, responseItem));
+        this.getEventByType(EventTypes.ON_LIST)?.emit(EventNames.OnConnectionFinish, new ApiContainer(req, res, responseItem));
         res.json(responseItem);
     }
     addEventListener = (evType: EventTypes, evName: EventNames, callBack: IEventListenerDelegate): void => {
