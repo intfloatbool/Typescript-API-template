@@ -1,9 +1,11 @@
-import {EventType} from '../Data/Events/EventType';
+import {EventTypes} from '../Data/Events/EventType';
 import {Request, Response, NextFunction, Router} from 'express';
 import {EventEmitter} from 'events';
+import { EventNames } from '../Data/Events/EventName';
+import ApiContainer from '../Data/ApiContainer';
 
 export interface IEventListenerDelegate {
-    (req: Request, res:Response, ...params: any[]): void;
+    (apiContainer: ApiContainer): void;
 }
 
 export interface IRouter {
@@ -18,6 +20,6 @@ export interface IRouterHandler {
     onGet(req: Request, res:Response, next?: NextFunction): Promise<void>;
     onList(req: Request, res:Response, next?: NextFunction): Promise<void>;
 
-    addEventListener(evType: EventType, callBack: IEventListenerDelegate): void;
-    getEvent(): EventEmitter;
+    addEventListener(evType: EventTypes, evName: EventNames ,callBack: IEventListenerDelegate): void;
+    getEventByType(evType: EventTypes): EventEmitter | undefined;
 }

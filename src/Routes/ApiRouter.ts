@@ -13,8 +13,8 @@ export default class ApiRouter implements IRouter {
         this._router.delete('/:id', this._handler.onDelete);
         this._router.get('/:id', this._handler.onGet);
         this._router.get('/', this._handler.onList);
-
     }
+    
     getHandler = () => this._handler;
     setHandler(handler: IRouterHandler): void {
         this._handler = handler;

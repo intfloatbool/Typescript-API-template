@@ -1,5 +1,5 @@
 import {EventEmitter} from 'events';
-import {EventType} from "../Data/Events/EventType";
+import {EventTypes} from "../Data/Events/EventType";
 import {IRouterHandler, IEventListenerDelegate } from "./RouterInterfaces";
 import {ParamsDictionary} from "express-serve-static-core";
 import * as Express from 'express';
@@ -7,16 +7,29 @@ import { FakeUserDataCreator } from '../Data/Factory/FakeUserDataCreator';
 import { ResponseItem, StatusType, FailedReason } from './ResponseData/ResponseData';
 import { User } from '../Models/Users/User';
 import UserValuesBuilder from '../Data/Builders/UserValuesBuilder';
+import { EventNames } from '../Data/Events/EventName';
+import ApiContainer from '../Data/ApiContainer';
 
 const dataProviderCreator = new FakeUserDataCreator();
 const dataProvider = dataProviderCreator.create();
 
 export default class UserRouterHandler implements IRouterHandler {
-    private _event: EventEmitter;
+    private _eventDict: Map<EventTypes, EventEmitter>;
     constructor() {
-        this._event = new EventEmitter();
+        this._eventDict = new Map<EventTypes, EventEmitter>();
+        this.initializeEventDict();
     }
-    async onPost(req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> {
+
+    initializeEventDict() {
+        this._eventDict.set(EventTypes.ON_DELETE, new EventEmitter());
+        this._eventDict.set(EventTypes.ON_GET, new EventEmitter());
+        this._eventDict.set(EventTypes.ON_LIST, new EventEmitter());
+        this._eventDict.set(EventTypes.ON_POST, new EventEmitter());
+        this._eventDict.set(EventTypes.ON_PUT, new EventEmitter());
+    }
+    onPost = async (req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> => {
+        
+        this.getEventByType(EventTypes.ON_POST)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res));
         const body = req.body;
         const responseItem = new ResponseItem();
         try {
@@ -41,9 +54,11 @@ export default class UserRouterHandler implements IRouterHandler {
             responseItem.Status = StatusType.FAILED;
             responseItem.Data = new FailedReason(err.toString());
         }
+        this.getEventByType(EventTypes.ON_POST)?.emit(EventNames.OnConnectionFinish, new ApiContainer(req, res, responseItem));
         res.json(responseItem);
     }    
-    async onPut(req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> {
+    onPut = async (req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> => {
+        this.getEventByType(EventTypes.ON_PUT)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res));
         const responseItem = new ResponseItem();
         const body = req.body;
         try {
@@ -71,10 +86,12 @@ export default class UserRouterHandler implements IRouterHandler {
             responseItem.Status = StatusType.FAILED;
             responseItem.Data = new FailedReason(err.toString());
         }
+        this.getEventByType(EventTypes.ON_PUT)?.emit(EventNames.OnConnectionFinish, new ApiContainer(req, res, responseItem));
         res.json(responseItem);
     }
-    async onDelete(req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> {
+    onDelete = async (req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> => {
         const responseItem = new ResponseItem();
+        this.getEventByType(EventTypes.ON_DELETE)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res));
         try {
             const userId = req.params.id;
             const isUserDeleted = await dataProvider.delete(Number(userId));
@@ -89,10 +106,12 @@ export default class UserRouterHandler implements IRouterHandler {
             responseItem.Status = StatusType.FAILED;
             responseItem.Data = new FailedReason(err.toString());
         }
+        this.getEventByType(EventTypes.ON_DELETE)?.emit(EventNames.OnConnectionFinish, new ApiContainer(req, res, responseItem));
         res.json(responseItem);
     }
-    async onGet(req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> {
+    onGet = async (req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> => {
         const responseItem = new ResponseItem();
+        this.getEventByType(EventTypes.ON_GET)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res));
         try {
             const userId = req.params.id;
             const user = await dataProvider.read(Number(userId));
@@ -107,10 +126,12 @@ export default class UserRouterHandler implements IRouterHandler {
             responseItem.Status = StatusType.FAILED;
             responseItem.Data = new FailedReason(err.toString());
         }
+        this.getEventByType(EventTypes.ON_GET)?.emit(EventNames.OnConnectionFinish, new ApiContainer(req, res, responseItem));
         res.json(responseItem);
     }
-    async onList(req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> {
+    onList = async (req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> => {
         const responseItem = new ResponseItem();
+        this.getEventByType(EventTypes.ON_LIST)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res));
         try {
             if(dataProvider) {
                 const users = await dataProvider.list();    
@@ -124,16 +145,14 @@ export default class UserRouterHandler implements IRouterHandler {
             responseItem.Status = StatusType.FAILED;
             responseItem.Data = new FailedReason(err.toString()); 
         }
-        
+        this.getEventByType(EventTypes.ON_LIST)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res, responseItem));
         res.json(responseItem);
     }
-    addEventListener(evType: EventType, callBack: IEventListenerDelegate): void {
-        this._event.addListener(evType.toString(), callBack);
+    addEventListener = (evType: EventTypes, evName: EventNames, callBack: IEventListenerDelegate): void => {
+        const event = this._eventDict.get(evType);
+        event?.addListener(evName.toString(), callBack);
     }
-    getEvent(): EventEmitter {
-        return this._event;
+    getEventByType = (eventType: EventTypes): EventEmitter | undefined => {
+        return this._eventDict.get(eventType);
     }
-
-
-
 }
