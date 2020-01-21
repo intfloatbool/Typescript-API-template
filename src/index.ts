@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import ApiRouter from './Routes/ApiRouter';
-import UserRouterHandler from './Routes/UserRouterHandler';
+import UserRouterHandler from './Routes/Handlers/UserRouterHandler';
 import { EventTypes } from './Data/Events/EventType';
 import { EventNames } from './Data/Events/EventName';
 

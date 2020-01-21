@@ -1,14 +1,14 @@
 import {EventEmitter} from 'events';
-import {EventTypes} from "../Data/Events/EventType";
-import {IRouterHandler, IEventListenerDelegate } from "./RouterInterfaces";
+import {EventTypes} from "../../Data/Events/EventType";
+import {IRouterHandler, IEventListenerDelegate } from "../RouterInterfaces";
 import {ParamsDictionary} from "express-serve-static-core";
 import * as Express from 'express';
-import { FakeUserDataCreator } from '../Data/Factory/FakeUserDataCreator';
-import { ResponseItem, StatusType, FailedReason } from './ResponseData/ResponseData';
-import { User } from '../Models/Users/User';
-import UserValuesBuilder from '../Data/Builders/UserValuesBuilder';
-import { EventNames } from '../Data/Events/EventName';
-import ApiContainer from '../Data/ApiContainer';
+import { FakeUserDataCreator } from '../../Data/Factory/FakeUserDataCreator';
+import { ResponseItem, StatusType, FailedReason } from '../ResponseData/ResponseData';
+import { User } from '../../Models/Users/User';
+import UserValuesBuilder from '../../Data/Builders/UserValuesBuilder';
+import { EventNames } from '../../Data/Events/EventName';
+import ApiContainer from '../../Data/ApiContainer';
 
 const dataProviderCreator = new FakeUserDataCreator();
 const dataProvider = dataProviderCreator.create();
