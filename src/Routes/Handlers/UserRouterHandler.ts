@@ -7,7 +7,7 @@ import { User } from '../../Models/Users/User';
 import UserValuesBuilder from '../../Data/Builders/UserValuesBuilder';
 import { EventNames } from '../../Data/Events/EventName';
 import ApiContainer from '../../Data/ApiContainer';
-import RouterHandlerBase from './RouterHandlerBase';
+import RouterHandlerBase from './Base/RouterHandlerBase';
 
 const dataProviderCreator = new FakeUserDataCreator();
 const dataProvider = dataProviderCreator.create();
