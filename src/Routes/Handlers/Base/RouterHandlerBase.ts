@@ -1,9 +1,9 @@
-import { IRouterHandler, IEventListenerDelegate } from "../RouterInterfaces";
+import { IRouterHandler, IEventListenerDelegate } from "../../RouterInterfaces";
 import { ParamsDictionary } from "express-serve-static-core";
 import { Request, Response, NextFunction } from "express";
-import { EventTypes } from "../../Data/Events/EventType";
+import { EventTypes } from "../../../Data/Events/EventType";
 import { EventEmitter } from "events";
-import { EventNames } from "../../Data/Events/EventName";
+import { EventNames } from "../../../Data/Events/EventName";
 
 export default class RouterHandlerBase implements IRouterHandler {
     
