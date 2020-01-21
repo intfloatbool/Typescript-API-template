@@ -1,6 +1,4 @@
-import {EventEmitter} from 'events';
 import {EventTypes} from "../../Data/Events/EventType";
-import {IRouterHandler, IEventListenerDelegate } from "../RouterInterfaces";
 import {ParamsDictionary} from "express-serve-static-core";
 import * as Express from 'express';
 import { FakeUserDataCreator } from '../../Data/Factory/FakeUserDataCreator';
@@ -9,24 +7,12 @@ import { User } from '../../Models/Users/User';
 import UserValuesBuilder from '../../Data/Builders/UserValuesBuilder';
 import { EventNames } from '../../Data/Events/EventName';
 import ApiContainer from '../../Data/ApiContainer';
+import RouterHandlerBase from './RouterHandlerBase';
 
 const dataProviderCreator = new FakeUserDataCreator();
 const dataProvider = dataProviderCreator.create();
 
-export default class UserRouterHandler implements IRouterHandler {
-    private _eventDict: Map<EventTypes, EventEmitter>;
-    constructor() {
-        this._eventDict = new Map<EventTypes, EventEmitter>();
-        this.initializeEventDict();
-    }
-
-    initializeEventDict() {
-        this._eventDict.set(EventTypes.ON_DELETE, new EventEmitter());
-        this._eventDict.set(EventTypes.ON_GET, new EventEmitter());
-        this._eventDict.set(EventTypes.ON_LIST, new EventEmitter());
-        this._eventDict.set(EventTypes.ON_POST, new EventEmitter());
-        this._eventDict.set(EventTypes.ON_PUT, new EventEmitter());
-    }
+export default class UserRouterHandler extends RouterHandlerBase {
     onPost = async (req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> => {
         
         this.getEventByType(EventTypes.ON_POST)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res));
@@ -147,12 +133,5 @@ export default class UserRouterHandler implements IRouterHandler {
         }
         this.getEventByType(EventTypes.ON_LIST)?.emit(EventNames.OnConnectionFinish, new ApiContainer(req, res, responseItem));
         res.json(responseItem);
-    }
-    addEventListener = (evType: EventTypes, evName: EventNames, callBack: IEventListenerDelegate): void => {
-        const event = this._eventDict.get(evType);
-        event?.addListener(evName.toString(), callBack);
-    }
-    getEventByType = (eventType: EventTypes): EventEmitter | undefined => {
-        return this._eventDict.get(eventType);
     }
 }
