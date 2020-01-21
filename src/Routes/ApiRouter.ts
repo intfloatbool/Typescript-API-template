@@ -9,8 +9,8 @@ export default class ApiRouter implements IRouter {
         this._router = Express.Router();
 
         this._router.post('/', this._handler.onPost);
-        this._router.put('/', this._handler.onPut);
-        this._router.delete('/', this._handler.onDelete);
+        this._router.put('/:id', this._handler.onPut);
+        this._router.delete('/:id', this._handler.onDelete);
         this._router.get('/:id', this._handler.onGet);
         this._router.get('/', this._handler.onList);
 

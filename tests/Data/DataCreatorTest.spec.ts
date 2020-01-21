@@ -3,7 +3,6 @@ import 'mocha';
 
 import {FakeUserDataCreator} from '../../src/Data/Factory/FakeUserDataCreator';
 import { User } from '../../src/Models/Users/User';
-import UserValues from '../../src/Models/Users/UserValues';
 import UserValuesBuilder from '../../src/Data/Builders/UserValuesBuilder';
 describe('DataCreators functional', () => {
     it('Should return data provider', () => {
