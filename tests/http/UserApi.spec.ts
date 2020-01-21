@@ -16,6 +16,9 @@ describe('Users api tests', () => {
             .setFirstName('Obezyanka-petrushka')
             .setPhoneNumber(`1488-1488-1488`)
             .build();
+
+        Reflect.set(values, 'role', 'ADMIN'); //set role for safe request
+        
         const response = await axios.post(urlPath, values);
         const responsedValues = response.data.Data._userValues;
         expect(responsedValues.firstName).is.equals(values.firstName);

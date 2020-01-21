@@ -8,17 +8,28 @@ import UserValuesBuilder from '../../Data/Builders/UserValuesBuilder';
 import { EventNames } from '../../Data/Events/EventName';
 import ApiContainer from '../../Data/ApiContainer';
 import RouterHandlerBase from './Base/RouterHandlerBase';
+import ISafeRouterHandler from "./Base/ISafeRouterHandler";
 
 const dataProviderCreator = new FakeUserDataCreator();
 const dataProvider = dataProviderCreator.create();
 
-export default class UserRouterHandler extends RouterHandlerBase {
+export default class UserRouterHandler extends RouterHandlerBase implements ISafeRouterHandler {
+    isSafe(req: Express.Request<ParamsDictionary>, res: Express.Response, nextFunc?: Express.NextFunction | undefined): Promise<boolean> {
+        const isCorrect = req.body?.role === 'ADMIN';
+        if(!isCorrect) {
+            throw new Error("PERMISSION_DENIED");
+        }
+        return Promise.resolve(isCorrect);
+    }
     onPost = async (req: Express.Request<ParamsDictionary>, res: Express.Response, next?: Express.NextFunction | undefined): Promise<void> => {
         
         this.getEventByType(EventTypes.ON_POST)?.emit(EventNames.OnConnectionStart, new ApiContainer(req, res));
         const body = req.body;
         const responseItem = new ResponseItem();
         try {
+            //checking role of user isnt admin - throws error
+            await this.isSafe(req, res);
+
             if(!body) {
                 throw new Error("No body of request.");
             }
