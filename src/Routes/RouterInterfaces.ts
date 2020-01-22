@@ -4,6 +4,10 @@ import {EventEmitter} from 'events';
 import { EventNames } from '../Data/Events/EventName';
 import ApiContainer from '../Data/ApiContainer';
 
+export interface ISafePredictableDelegate {
+    (apiContaine: ApiContainer): Promise<boolean>;
+}
+
 export interface IEventListenerDelegate {
     (apiContainer: ApiContainer): void;
 }

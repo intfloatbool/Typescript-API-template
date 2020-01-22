@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
+import { ISafePredictableDelegate } from '../../RouterInterfaces';
+import ApiContainer from '../../../Data/ApiContainer';
 
 /**
  * Interface about checking of some router predictions
@@ -10,5 +12,5 @@ export default interface ISafeRouterHandler {
      * @param res = response of router
      * @param nextFunc = ?next middleware function
      */
-    isSafe(req: Request, res: Response, nextFunc?: NextFunction): Promise<boolean>;
+    isSafe(apiContainer: ApiContainer, predictableDelegate: ISafePredictableDelegate): Promise<boolean>;
 }
