@@ -8,7 +8,7 @@ import { EventNames } from './Data/Events/EventName';
 const PORT = process.env.PORT || 6011;
 const app = express();
 
-const RoutesPath = {
+const MiddleWares = {
     USERS: '/users'
 }
 
@@ -57,7 +57,7 @@ ApiRouters.USERS.getHandler().addEventListener(EventTypes.ON_PUT, EventNames.OnC
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use(RoutesPath.USERS, ApiRouters.USERS.getRouter());
+app.use(MiddleWares.USERS, ApiRouters.USERS.getRouter());
 
 app.get('/', (req, res) => {
     const body = req.body;
