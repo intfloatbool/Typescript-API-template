@@ -12,8 +12,11 @@ export interface IEventListenerDelegate {
     (apiContainer: ApiContainer): void;
 }
 
-export interface IRouter {
+export interface IApiRouter extends IRouter {
     setHandler(handler: IRouterHandler): void;
+}
+
+export interface IRouter {
     getRouter(): Router;
 }
 

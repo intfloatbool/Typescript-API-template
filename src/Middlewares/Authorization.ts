@@ -19,7 +19,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
             return res.json(responseItem);
 
         } else {
-            req.param('decoded', decoded);
+            req.body['decoded'] = decoded;
             next();
         }
         });
