@@ -7,7 +7,7 @@ export default class AuthorizationRouter implements IRouter {
     private _router: Express.Router;
     constructor() {
         this._router = Express.Router();
-        this._router.post('/', async (req, res) => {
+        this._router.post('/login', async (req, res) => {
             const responseItem = new ResponseItem();
             const login = req.body?.login;
             const password = req.body?.password;

@@ -13,7 +13,7 @@ const app = express();
 
 const RoutesPath = {
     USERS: '/users',
-    LOGIN: '/login'
+    LOGIN: '/auth'
 }
 
 const ApiRouters = {
