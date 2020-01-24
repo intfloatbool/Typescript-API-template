@@ -1,23 +1,16 @@
 import ValuesBase from "../ValuesBase";
+import IClonable from "../Interfaces/IClonable";
 
-export default class UserValues extends ValuesBase {
+export default class UserValues extends ValuesBase implements IClonable<UserValues> {
     firstName?: String;
     phoneNumber?: String;
     userRole?: Number;
     bonuses?: Number;
     
     clone(oldValues?: UserValues): UserValues  {
-        if(oldValues) {
-            Object.keys(oldValues).forEach(k => {
-                let oldValue = Reflect.get(oldValues, k);
-                if(oldValue) {
-                    let newValue = Reflect.get(this, k);
-                    if(!newValue) {
-                        Reflect.set(this, k, oldValue);
-                    }
-                }
-            });
-        }
+        if(oldValues) 
+            this.saveOldValues(oldValues);
+
         const copy = new UserValues();
         copy.itemID = this.itemID;
         copy.firstName = this.firstName;

@@ -5,8 +5,8 @@ import ValuesBase from "../Models/ValuesBase";
  */
 export interface IDataProvider<T, V extends ValuesBase> {
     create(item: T): Promise<T>;
-    update(itemId: Number, values: V): Promise<T>; 
-    read(id: Number): Promise<T> | Promise<null>;
-    delete(id: Number): Promise<boolean>;
+    update(values: V, ...keys: any): Promise<T>; 
+    read(...keys: any): Promise<T> | Promise<null>;
+    delete(...keys: any): Promise<boolean>;
     list(): Promise<Array<T>>;
 }

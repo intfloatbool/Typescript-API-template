@@ -1,7 +1,7 @@
 import 'mocha';
 import {expect} from 'chai';
 import axios from 'axios';
-import UserValuesBuilder from '../../src/Data/Builders/UserValuesBuilder';
+import UserValuesBuilder from '../../src/Data/Builders/ValuesBuilder/UserValuesBuilder';
 
 const urlPath = 'http://localhost:6011/users/';
 

@@ -1,7 +1,7 @@
 import { IDataProvider } from "../../IDataProvider";
 import {User} from '../../../Models/Users/User';
 import UserValues from "../../../Models/Users/UserValues";
-import UserValuesBuilder from "../../Builders/UserValuesBuilder";
+import UserValuesBuilder from "../../Builders/ValuesBuilder/UserValuesBuilder";
 
 export class FakeDataProvider implements IDataProvider<User, UserValues> {
     
@@ -48,7 +48,8 @@ export class FakeDataProvider implements IDataProvider<User, UserValues> {
             }
         });
     }
-    update(userId: Number, newUserValues: UserValues): Promise<User> {
+    update(newUserValues: UserValues, ...keys: any): Promise<User> {
+        const userId = keys[0];
         return new Promise((resolve, reject) => {
             try {
                 const target = this.userData.find(u => u.getValues().itemID === userId);

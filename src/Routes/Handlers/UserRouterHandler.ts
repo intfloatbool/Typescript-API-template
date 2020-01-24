@@ -4,7 +4,7 @@ import * as Express from 'express';
 import { FakeUserDataCreator } from '../../Data/Factory/FakeUserDataCreator';
 import { ResponseItem, StatusType, FailedReason } from '../ResponseData/ResponseData';
 import { User } from '../../Models/Users/User';
-import UserValuesBuilder from '../../Data/Builders/UserValuesBuilder';
+import UserValuesBuilder from '../../Data/Builders/ValuesBuilder/UserValuesBuilder';
 import { EventNames } from '../../Data/Events/EventName';
 import ApiContainer from '../../Data/ApiContainer';
 import RouterHandlerBase from './Base/RouterHandlerBase';
@@ -70,11 +70,13 @@ export default class UserRouterHandler extends RouterHandlerBase implements ISaf
             const phoneNumber = body.phoneNumber;
 
             const userId = req.params.id;
-            const user = await dataProvider.update(Number(userId), 
+            const user = await dataProvider.update( 
                 new UserValuesBuilder()
                     .setFirstName(firstName)
                     .setPhoneNumber(phoneNumber)
-                    .build()
+                    .build(),
+                    
+                    Number(userId)
                 );
             if(user) {
                 responseItem.Status = StatusType.SUCCESS;

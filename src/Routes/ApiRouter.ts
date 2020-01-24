@@ -8,12 +8,12 @@ export default class ApiRouter implements IApiRouter {
     constructor(handler: IRouterHandler) {
         this._handler = handler;
         this._router = Express.Router();
-
-        this._router.post('/', Authorization,this._handler.onPost);
-        this._router.put('/:id', Authorization, this._handler.onPut);
-        this._router.delete('/:id', Authorization, this._handler.onDelete);
-        this._router.get('/:id', Authorization, this._handler.onGet);
-        this._router.get('/', Authorization, this._handler.onList);
+        
+        this._router.post('/', this._handler.onPost);
+        this._router.put('/:id', this._handler.onPut);
+        this._router.delete('/:id', this._handler.onDelete);
+        this._router.get('/:id', this._handler.onGet);
+        this._router.get('/', this._handler.onList);
     }
     
     getHandler = () => this._handler;
